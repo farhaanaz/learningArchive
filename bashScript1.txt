@@ -1,0 +1,76 @@
+#!/bin/bash
+
+wget $1 > /dev/null
+unzip $2.zip > /dev/null
+sudo cp -r $2/* /var/www/html/
+--------------------------------
+
+So, when the variable is not yet assigned in bash, you could assign it when you call the bash script
+
+example:
+[root@scriptbox scripts]# ./5_args_websiteSetup.sh https://www.tooplate.com/zip-templates/2131_wedding_lite.zip 2131_wedding_lite
+
+up there, the first variable is the link, and the second variable is the the zip name
+
+$0 is the name of the script.
+$1-$9 are the command line arguments.
+
+echo $?					- print exit status of last command
+
+
+[root@scriptbox scripts]# SEASON="Monsoon"
+[root@scriptbox scripts]# export SEASON		- This will store the variable to only root user (cause we're in root)
+Note: it'll be the same if we add the variable to /.bashrc or /.profile (means it'll only stored to one user not globally)
+
+vi /etc/profile -> export "SEASON"			- This will store the variable to all users (global)
+
+READ THE SUMMARY BLUD!!!!
+To export variable for user we put export variable command in ~/.bashrc or ~/.profile file
+To export variable for all users we put export variable command in /etc/profile file
+
+----
+read -p			- for the prompt [just like prompt() in javascript]
+read -sp		- -s to hide the character when fill the prompt
+----
+
+----
+#!/bin/bash
+echo "Enter your skills!"
+read SKILL
+
+echo "Your $SKILL is in high demand in the IT Industry."
+
+read -p 'Username: ' USR
+read -sp 'Password: ' pass
+
+echo
+
+echo "Login successfull: Welcome USER $USR."
+----
+
+----
+Using crontab to automate scripts
+
+[root@scriptbox ~]# crontab -e
+# Minute Hour DayOfTheMonth month dayOfTheWeek COMMAND
+# 30 20 * * * 1-5 COMMAND
+* * * * *  /opt/scripts/11_monit.sh &>> /var/log/monit_httpd.log
+
+----
+copying ssh-keygen to another user
+[root@scriptbox ~]# ssh-copy-id uplik@web01
+
+----
+directly use for loop in terminal (the case is to ssh to another vm and checking the uptime)
+
+[root@scriptbox remote_websetup]# vim remoteHost
+(fill the file with vm hostname (etc: web01, web02))
+[root@scriptbox remote_websetup]# for host in `cat remoteHosts`; do ssh uplik@$host uptime;done
+ 06:28:47 up 4 min,  0 users,  load average: 0.09, 0.40, 0.22
+ 06:28:48 up 2 min,  0 users,  load average: 0.58, 0.60, 0.25
+[root@scriptbox remote_websetup]#
+
+
+push files to another vm
+[root@scriptbox remote_websetup]# scp textfile.txt uplik@web01:/tmp/
+[root@scriptbox remote_websetup]# scp -i ~/.ssh/id_rsa textfile.txt uplik@$web02:/home

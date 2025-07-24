@@ -1,0 +1,214 @@
+pwd	Show current working directory
+
+ls
+ls -l			- list all file (a-z)
+ls -lt			- list all file (z-a)
+ls -ltr			- list all file (z-a last modified)
+
+cd [dir]		- Change directory to [dir]
+cd ..			- Go up one directory
+
+mkdir [dir]		- Create a new directory
+
+rm [file]		- Remove a file
+rm -r [dir]		- Remove a directory and its contents
+
+touch [file]	- Create a new empty file
+
+cp [src] [dest]	- Copy files or directories
+
+mv [src] [dest]	- Move or rename files or directories
+
+cat [file]		- Show file content
+
+nano [file]		- Open file in nano editor
+
+whoami			- Show current user
+
+uname -a		- Show system info
+
+top				- Show running processes
+
+ps				- Show process status
+
+df -h			- Show disk space
+
+free -h			- Show memory usage
+
+chmod [mode][file]	- Change file permissions
+
+chown [user][file]	- Change file owner
+
+ln -s [/dir] [name] - create shortcut
+
+ss -tunlp			- check port open and process id
+nslookup [address]	- DNS lookup
+dig [address]		- DNS lookup
+route -n			- show gateways
+arp					- show arp
+
+grep -i [text] [source] - search text by sourcefile. (ex:  grep -i firewall anaconda-ks.cfg)
+grep -i [text] * 		- Search everywere on the machine
+grep -iR [text] * 		- Search everywere with the directories included
+grep -vi [text] [source] - reverse (will not show the text included)
+
+less [file]		- read file
+
+head [file]		- Show the first 10 lines of a file
+
+tail [file]		- Show the last 10 lines of a file
+tail -f [file]	- show lines dynamicaly (ex: tail -f /var/log/messages) (usually for real-time monitor)
+
+cut -d: -f1 /etc/passwd - searching through file using delimeters
+awk  -F':' '{print $1}' /etc/passwd - searching through file using delimeters
+(on those 2 command above the delimeteres is ":")
+
+:%s/originaltxt/newtxt - change words in vim (use /g to change globally)
+sed 's/originaltxt/newtxt/g file.txt - change the word in file (wouldn't change the orignal file, use sed -i to save it)
+
+
+-----------------Redirections-----------------------
+1>>			- normal output
+2>>			- standart error output (ex: freee -m 2> /tmp/error.log) the error message will be stored to error.log
+&>>			- any kind of output
+
+[root@vbox ~]# uptime > /tmp/sysinfo.txt
+[root@vbox ~]# echo ------------------------------------ >> /tmp/sysinfo.txt
+[root@vbox ~]# date > /tmp/sysinfo.txt
+[root@vbox ~]# echo ------------------------------------ >> /tmp/sysinfo.txt
+[root@vbox ~]# uptime >> /tmp/sysinfo.txt
+[root@vbox ~]# echo ------------------------------------ >> /tmp/sysinfo.txt
+[root@vbox ~]# free -m >> /tmp/sysinfo.txt
+[root@vbox ~]# echo ------------------------------------ >> /tmp/sysinfo.txt
+[root@vbox ~]# df -h >> /tmp/sysinfo.txt
+[root@vbox ~]# echo ------------------------------------ >> /tmp/sysinfo.txt
+
+/dev/null - to hide the output (ex: yum install vim -y > /dev/null)
+also can used to clear/delete file content (ex: cat /dev/null > /tmp/sysinfo.txt)
+--------------------------------------------------------------
+
+-----------------Piping / Filtering-----------------------
+wc -l [dir]				- count line number on file
+ls | grep [keywords]	- "| grep" = "| i"
+usecase ex: tail -20 /var/log/messages | grep -i vagrant
+
+find [dir] -name [keywords] = search all file named [keywords]
+----------------------------------------------------------
+
+-------------------Users and groups-----------------------
+useradd "usname"					- adding user
+groupadd "groupname"				- adding group
+usermod -aG "groupname" "usname" 	- moving user to the group
+or u could use vim to modify it!
+
+passwd "usname"						- change user password
+
+last								- log who's login to the system
+lsof -u vagrant						- show all the opened file by the user
+
+userdel -r "usname"					- delete user with their directory
+groupdel "groupname"				- delete group with their directory
+
+[root@vbox ~]# head -2 /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+vagrant:x:1000:1000::/home/vagrant:/bin/bash
+7 column separated by ":" | the detail is down here
+usname:shadowfile:userid:groupid:comment:directory:loginshell
+
+cat /etc/group to show the group files
+
+----------------------------------------------------------
+
+-------------------------File Permissions-----------------
+file permissions may be viewed using ls -l
+Four symbols are used while displaying permissions:
+r: read
+w: write or create and remove
+x: execute
+-: no permission (in the place of the r, w, or x)
+
+letst try to breakdown using ls -l
+-rw-------. 1 root root 2058 May 19 12:31 anaconda-ks.cfg
+
+-: filetypes
+rw-: user
+---: group
+---: others
+root: user
+root: group
+
+ls -ld [/dir]					- show permissions of directory
+chown "usn":"groupname" [/dir] 	- change directory owner
+chmod "usn"-/+"permission" [/dir]				- change permissions
+example: chmod o-r /opt/devs		- delete others read permissions 
+----------------------------------------------------------
+
+---------------------------sudo---------------------------
+to give username sudo access, use visudo and then add the username in around line 100
+note: update regurarely
+----------------------------------------------------------
+
+--------------------------Package management--------------
+curl [url] -o [name]			- grab .rpm packages from internet
+rpm -ivg [name]					- install .rpm packages
+rpm -qa | grep [name]			- see wether it's installed or not
+rpm -e [name]					- uninstall .rpm packages
+|note:
+instead of curl, you could use wget to grab .rpm packages from internet without giving them name
+but, you still install it using rpm -ivg [name].
+while using rpm-ivg we need to install all the dependencies of the packages.|
+
+instead of using curl or wget. You should use yum or dnf
+yum install [files]				- install packages with all the dependencies
+yum remove [files]				- uninstall packages
+dnf install [files]				- install packages with all the dependencies
+dnf install [files]				- uninstall packages
+ls /etc/yum.repos.d				- show reposity available in yum
+dnf repolist					- show reposity available in dnf
+
+apt update
+apt upgrade
+apt install [packages]
+apt remove [packages]			- remove packages (without removing the configuration)
+apt purge [packages]			- remove packages (with the configuration)
+
+dpkg -last						- show available repo (in ubuntu)
+BUT sometimes you still need curl/wget ti grab the packages from the internet if the packages is not available in yum.
+Then all you need to do is follow the instruction on the packages developer website to install it.
+
+
+----------------------------------------------------------
+
+--------------------------services------------------------
+
+systemctl status [service]				- show app status
+systemctl --no-pager status [service]	- show app without pager
+systemctl start [service]				- start app
+systemctl restart [service]				- restart
+systemctl reload [service]				- reload
+systemctl enable [service]				- the service will automatically up when the machine boot up
+systemctl is-active [service]			- show status
+systemctl is-active [service]			- show enabled or not
+systemctl stop [service]				- stop
+systemctl disable [service]				- opposite of enable
+----------------------------------------------------------
+
+---------------------------processes----------------------
+top				- show processes(task manager in windows)
+ps aux
+ps -ef			- show all the process with their parent process id
+kill [PID]		- stop services gracefully (stop the main and child process)
+kill -9 [PID]	- stop service forcefully (the child process will not be stopped)
+
+tips below is to show all the PID orphan processes of the httpd processes and the shut them down
+ps -ef | grep httpd | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+----------------------------------------------------------
+
+---------------------------archiving----------------------
+tar -czvf nginx_20250526.tar.gz [/dir/]		- Archive
+tar -xzvf nginx_20250526.tar.gz				- Unarchive
+NOTE: user -C [/dir/] to directly unarchive to a folder
+zip -r  nginx_20250526.tar.gz [name]		- Archive
+unzip nginx_20250526.tar.gz					- Unarchive
+----------------------------------------------------------

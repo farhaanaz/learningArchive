@@ -1,0 +1,43 @@
+cat .git/config			- show git configuration
+ssh-keygen.exe
+ls .ssh
+
+
+git init
+git status
+git add .		(add means current directory) this called stagging
+git --global user.email "email@address.com"
+git --global user.name "username"
+git commit -m "first commit..."
+
+Clone repo to local
+git clone [URL]
+
+LOCAL to remote configuration
+cd to local repo
+git remote add origin
+ssh://git@github.com/...
+
+git push
+git pull
+
+git log --oneline
+git show [commitId]
+git branch -c [name]			- create new branch
+git branch -a					- show branches
+git checkout [branchName]		- switch to other branch
+git swith [branchName]			- switch to other branch
+git rm [filename]				- remove files
+git mv 
+touch							- create new files
+rm -rf [foldername]				- remove folder or git project
+
+git checkout [filename]			- rollback file before stagging
+git diff						- check the difference of the file that you're change
+note: use git status then git diff to see what's changing
+git diff --cached				- to show changes after staged
+git restore --staged [filename]	- restore file that already staged
+git log --oneline				- show commit log (contain id)
+git diff [commitId]				- show differences in commited files
+git revert HEAD	/ [commidId]	- rollback to before the HEAD (logging to history)
+git reset --hard [commidId]		- rollback without logging to history
